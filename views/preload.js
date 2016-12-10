@@ -47,7 +47,7 @@
       return "<span class='greentext'>" + msg + "</span>";
 
     if (msg.startsWith('[CODE]<br>')) {
-      return "<code>" + hl(msg.substr(10).replace(/<br>/g, "\n").replace(/&lt;/g,'<').replace(/&gt;/g,'>')) + "</code>";
+      return "<code>" + hl.highlightAuto(msg.substr(10).replace(/<br>/g, "\n").replace(/&lt;/g,'<').replace(/&gt;/g,'>')).value + "</code>";
     }
     
     msg = msg.replace(/windows/gi, "<span class='gay'>windows</span>");
@@ -252,7 +252,7 @@ function installAce (e) {
 
 	window.addEventListener("DOMContentLoaded", function(event) {
 		$  = require('../assets/jquery-2.2.3.min');
-    hl = require("highlight.js").Highlight;
+    hl = require("highlight.js");
 
     try {
       require('../assets/ace-builds/src-min-noconflict/ace.js');
@@ -269,6 +269,7 @@ function installAce (e) {
         }, 100);
       });
     } catch (ex) {}
+
     // setInterval(installAce, 1000);
 
     setInterval( _ => {
