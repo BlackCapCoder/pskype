@@ -252,21 +252,23 @@ function installAce (e) {
 
 	window.addEventListener("DOMContentLoaded", function(event) {
 		$  = require('../assets/jquery-2.2.3.min');
-    hl = require("highlight").Highlight;
-    require('../assets/ace-builds/src-min-noconflict/ace.js');
-    require('../assets/ace-builds/src-min-noconflict/keybinding-vim.js');
-    VimApi = ace.require('ace/keyboard/vim').CodeMirror.Vim;
+    hl = require("highlight.js").Highlight;
 
-    VimApi.defineEx("write", "w", function (cm, input) {
-      var el = document.getElementById('chatInputAreaWithQuotes')
-			el.value=editor.getValue();
-      // document.querySelector('.send-button').click()
-      setTimeout ( _ => {
-        tb.style.display = "none";
-        el.focus();
-      }, 100);
-    });
+    try {
+      require('../assets/ace-builds/src-min-noconflict/ace.js');
+      require('../assets/ace-builds/src-min-noconflict/keybinding-vim.js');
+      VimApi = ace.require('ace/keyboard/vim').CodeMirror.Vim;
 
+      VimApi.defineEx("write", "w", function (cm, input) {
+        var el = document.getElementById('chatInputAreaWithQuotes')
+        el.value=editor.getValue();
+        // document.querySelector('.send-button').click()
+        setTimeout ( _ => {
+          tb.style.display = "none";
+          el.focus();
+        }, 100);
+      });
+    } catch (ex) {}
     // setInterval(installAce, 1000);
 
     setInterval( _ => {
