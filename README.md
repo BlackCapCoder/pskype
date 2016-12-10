@@ -9,7 +9,7 @@ PSkype is modal (like Vim!), there are 3 modes:
 * Find mode
 
 #### Chat mode
-In chat mode the chat mode the chat box is selected, and you can write messages. Pressing escape puts you in browse mode.
+In chat mode the chat box is selected, and you can write messages. Pressing escape puts you in browse mode.
 
 #### Browse mode
 The chat is selected, and you can press:
