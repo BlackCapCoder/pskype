@@ -26,5 +26,15 @@ The chat is selected, and you can press:
 In find mode you have letters next to your conversations. Type a letter to go to that conversation and enter chat mode.
 ![Screenshot](assets/screenshots/02.png)
 
-## Vim editor
+## Other bits and pieces
+#### Vim editor
 Pressing Ctrl+i in any mode brings up a text editor with Vim emulation. `:w` writes the change to the chat box. It is still a work in progress
+
+#### Inline syntax markup
+If you send a message starting with `[CODE]`, this happens:
+![Screenshot](assets/screenshots/03.png)
+
+#### Greentexting
+Any message starting with `>` will become green
+![Screenshot](assets/screenshots/04.png)
+
