@@ -41,29 +41,242 @@
 		setActivityHandle(settings.RefreshInterval);
 	});
 
+  function processMessage (msg) {
+    // console.log(msg);
+    if (msg.startsWith('&gt;'))
+      return "<span class='greentext'>" + msg + "</span>";
+
+    if (msg.startsWith('[CODE]<br>')) {
+      return "<code>" + hl(msg.substr(10).replace(/<br>/g, "\n").replace(/&lt;/g,'<').replace(/&gt;/g,'>')) + "</code>";
+    }
+    
+    msg = msg.replace(/windows/gi, "<span class='gay'>windows</span>");
+    msg = msg.replace(/linux/gi, "<span class='cool'>Linux</span>");
+
+    return msg;
+  }
+
 	function stopIt(event) {
-		if (settings.AltSendKeys && event.keyCode === 13 && event.target.id === "chatInputAreaWithQuotes") {
+    // console.log(event);
+
+    if (event.srcElement.id == "chatInputAreaWithQuotes") {
+      if (event.key == "Escape" || event.key == "Esc" || event.keyCode == 27) {
+        var hs = document.getElementsByClassName('conversationHistory');
+
+        for (let i = 0; i < hs.length; i++) {
+          if (!(hs[i].parentElement.contains(event.srcElement))) continue;
+          event.preventDefault();
+          return hs[i].querySelector('.conversation').focus();
+        }
+      }
+    } else if (findMode && (event.key == "Escape" || event.key == "Esc" || event.keyCode == 27)) {
+      for (let i = 0; i < finds.length; i++)
+        finds[i][2].parentElement.removeChild(finds[i][2]);
+      findMode = false;
+      finds = [];
+      event.preventDefault();
+      return
+    }
+
+    if (event.key == "i" && event.ctrlKey) {
+      installAce (event.srcElement);
+    }
+
+		if (settings.AltSendKeys && event.keyCode === 13 && event.target.id === "message-box") {
 			if (event.ctrlKey) {
 				$('.send').click();
 			} else {
 				// hack to intercept sending message
-				var tmp = $('#chatInputAreaWithQuotes').val();
-				$('#chatInputAreaWithQuotes').get(0).value = '';
-				$('#chatInputAreaWithQuotes').trigger('blur');
+				var tmp = $('#message-box').val();
+				$('#message-box').get(0).value = '';
+				$('#message-box').trigger('blur');
 				setTimeout(function() {
-					$('#chatInputAreaWithQuotes').focus();
-					$('#chatInputAreaWithQuotes').get(0).value = tmp + "\n";
-					$('#chatInputAreaWithQuotes').trigger('blur');
-					$('#chatInputAreaWithQuotes').focus();
+					$('#message-box').focus();
+					$('#message-box').get(0).value = tmp + "\n";
+					$('#message-box').trigger('blur');
+					$('#message-box').focus();
 				}, 0);
 			}
 		}
 	}
 
+  scrollSpeed = 5;
+  scrollDecay = 0.95;
+
+  var lastEl;
+  var ySpeed = 0;
+  function scrollStep () {
+    if (Math.abs(ySpeed) < 0.1) return ySpeed = 0;
+    // var sc = document.querySelector('.conversationHistory > .conversation');
+    var sc = lastEl;
+
+    sc.scrollTop += ySpeed;
+    ySpeed *= scrollDecay;
+    setTimeout(scrollStep, 20);
+  }
+
+  findMode = false;
+  var finds    = [];
+  var findkeys = "asdfjklørughieqwopzxcvbnm"
+  function onKeyPress (e) {
+    // console.log(e);
+    if (e.srcElement.id == "chatInputAreaWithQuotes" || e.srcElement.classList.contains("ace_text-input")) {
+      return;
+    }
+
+    if (findMode) {
+      var el = undefined;
+
+      for (let i = 0; i < finds.length; i++) {
+        if (finds[i][0] == e.key) {
+          el = finds[i][1]; break; 
+      }}
+
+      if (el != undefined) {
+        el.click();
+        findElem = el;
+        findMode = false;
+        for (let i = 0; i < finds.length; i++)
+          finds[i][2].parentElement.removeChild(finds[i][2]);
+
+        return;
+      }
+    }
+
+    // console.log(1);
+    if ("jkgGed".indexOf(e.key) != -1) {
+      var sc = e.srcElement;
+      lastEl = sc;
+
+      if (e.key == 'j') ySpeed += scrollSpeed;
+      if (e.key == 'k') ySpeed -= scrollSpeed;
+      if (e.key == 'g') sc.scrollTop = 0;
+      if (e.key == 'G') sc.scrollTop = sc.scrollHeight;
+      if (e.key == 'd') sc.scrollTop += sc.clientHeight * 0.5;
+      if (e.key == 'e') sc.scrollTop -= sc.clientHeight * 0.5;
+
+      scrollStep();
+    }
+
+    if ("i".indexOf(e.key) != -1) {
+      var hs = document.getElementsByClassName('conversationControl');
+      var el;
+
+      for (let i = 0; i < hs.length; i++) {
+        if (!(hs[i].parentElement.contains(e.srcElement))) continue;
+        el = hs[i].querySelector('textarea');
+        break;
+      }
+
+      // var el = document.getElementById('chatInputAreaWithQuotes');
+
+      if (e.key == 'i') {
+        el.focus()
+        e.preventDefault();
+        return false;
+      }
+    }
+
+    if (e.key == 'f') {
+      var els = document.getElementsByClassName('recent');
+      finds = [];
+
+      for (let i = 0; i < els.length; i++) {
+        let k = "asdfjklørughieqwopzxcvbnm"[i];
+        let e = els[i];
+        let f = document.createElement('span');
+        let r = e.getBoundingClientRect();
+
+        f.setAttribute('class', 'find-hint');
+        f.style.top = r.top + 15 + "px";
+        f.style.left = r.left + 4 + "px";
+        f.innerText = k;
+        document.body.appendChild(f);
+
+        finds.push([k,e,f]);
+      }
+
+      findMode = true;
+    }
+  }
+
 	window.addEventListener('keydown', stopIt, true);
+  window.addEventListener('keypress', onKeyPress, true);
+
+function installAce (e) {
+  var hs = document.getElementsByClassName('conversationControl');
+  var el;
+
+  for (let i = 0; i < hs.length; i++) {
+    if (!(hs[i].parentElement.contains(e))) continue;
+    el = hs[i].querySelector('.tc');
+    break;
+  }
+
+  // let el = document.querySelector('.tc');
+  let r  = el.getBoundingClientRect;
+  let ia = el.querySelector('textarea');
+
+  // if (el == undefined) return;
+  // el.classList.remove('tc');
+
+  tb = document.getElementById('message-box');
+  if (tb == undefined) {
+    tb = document.createElement('div');
+    tb.setAttribute('id', 'message-box');
+    tb.style.width  = /*r.width */"440" + "px";
+    tb.style.height = /*r.height */"96"  + "px";
+    tb.style.position = "absolute";
+    tb.style.bottom = 0;
+    tb.style.right = "5px";
+    tb.style.fontSize = "125%";
+    tb.style.font = "12px/normal monospace, 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace";
+    tb.style.zIndex = "1000";
+    tb.style.background = "#220022";
+    tb.style.color = "white";
+  }
+
+  tb.style.display = "block";
+  document.body.appendChild(tb);
+
+  editor = ace.edit('message-box');
+  editor.setValue(ia.value);
+  editor.setKeyboardHandler("ace/keyboard/vim");
+  editor.setAutoScrollEditorIntoView(true);
+
+  setTimeout(_ => {
+    var el = document.getElementsByClassName('ace_text-input')[0];
+    el.focus ();
+  }, 100);
+}
 
 	window.addEventListener("DOMContentLoaded", function(event) {
-		$ = require('../assets/jquery-2.2.3.min');
+		$  = require('../assets/jquery-2.2.3.min');
+    hl = require("highlight").Highlight;
+    require('../assets/ace-builds/src-min-noconflict/ace.js');
+    require('../assets/ace-builds/src-min-noconflict/keybinding-vim.js');
+    VimApi = ace.require('ace/keyboard/vim').CodeMirror.Vim;
+
+    VimApi.defineEx("write", "w", function (cm, input) {
+      var el = document.getElementById('chatInputAreaWithQuotes')
+			el.value=editor.getValue();
+      // document.querySelector('.send-button').click()
+      setTimeout ( _ => {
+        tb.style.display = "none";
+        el.focus();
+      }, 100);
+    });
+
+    // setInterval(installAce, 1000);
+
+    setInterval( _ => {
+      var els = document.querySelectorAll(':root .swx .chat .conversation .message .bubble .content p');
+      for (let i = 0; i < els.length; i++) {
+        var el = els[i]
+        el.innerHTML = processMessage(el.innerHTML);
+        el.outerHTML = el.outerHTML.replace("<p ","<message ").replace("</p>", "</message>");
+      }
+    }, 1000);
 
 		// Hacking the skype hack
 		document.addEventListener('click', function(event) {

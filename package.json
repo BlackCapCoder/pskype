@@ -37,6 +37,7 @@
   "dependencies": {
     "mime": "^1.3.4",
     "stylus": "^0.54.5",
-    "tmp": "0.0.28"
+    "tmp": "0.0.28",
+    "highlight.js": "9.8.0"
   }
 }

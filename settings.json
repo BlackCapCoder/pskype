@@ -2,12 +2,13 @@
 	"AltSendKeys": false,
 	"StartMinimized": false,
 	"MicrosoftAccount": false,
-	"NativeImageViewer": false,
+	"NativeImageViewer": true,
 	"Mute": false,
 	"EnableNotifications": true,
 	"OpenWhenMessaged": false,
 	"ProxyRules": "",
 	"ZoomFactor": 1.0,
 	"RefreshInterval": 30,
-	"QuitByCloseWindow": false
+	"QuitByCloseWindow": true,
+	"Theme": "dark"
 }
