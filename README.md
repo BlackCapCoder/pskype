@@ -27,4 +27,4 @@ In find mode you have letters next to your conversations. Type a letter to go to
 
 
 ## Vim editor
-Pressing Ctrl+i in any mode brings up a text editor with Vim emulation. :W writes the change to the chat box. It is still a work in progress
+Pressing Ctrl+i in any mode brings up a text editor with Vim emulation. `:w` writes the change to the chat box. It is still a work in progress
