@@ -49,6 +49,21 @@
     if (msg.startsWith('[CODE]<br>')) {
       return "<code>" + hl.highlightAuto(msg.substr(10).replace(/<br>/g, "\n").replace(/&lt;/g,'<').replace(/&gt;/g,'>')).value + "</code>";
     }
+
+    if (msg.startsWith('[haskell]')) {
+      var code = msg.substr(9).replace(/<br>/g, "\n").replace(/&lt;/g,'<').replace(/&gt;/g,'>');
+      var id   = Math.floor(Math.random() * 1000);
+      
+      runhaskell (code, r => {
+        var el = document.getElementById(id);
+        // el.innerHTML = r;
+        // el.removeAttribute('id');
+        el.outerHTML = "<code>" + hl.highlight("haskell", "-- Result:\n" + r).value + "</code>";
+      });
+
+      return "<code>" + hl.highlight("haskell", code).value + "</code>" 
+           + "<span class='snippet' id='" + id + "'>Calculating..</span>";
+    }
     
     msg = msg.replace(/windows/gi, "<span class='gay'>windows</span>");
     msg = msg.replace(/linux/gi, "<span class='cool'>Linux</span>");
@@ -269,6 +284,10 @@ function installAce (e) {
           el.focus();
         }, 100);
       });
+    } catch (ex) {}
+
+    try {
+      runhaskell = require('runhaskell');
     } catch (ex) {}
 
     // setInterval(installAce, 1000);
