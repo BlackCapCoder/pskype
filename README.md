@@ -38,3 +38,6 @@ If you send a message starting with `[CODE]`, this happens:
 Any message starting with `>` will become green
 ![Screenshot](assets/screenshots/04.png)
 
+#### Inline snippet things!
+Anything inside backticks will become a inline snippet thing
+![Screenshot](assets/screenshots/05.png)
