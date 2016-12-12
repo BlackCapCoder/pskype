@@ -44,4 +44,5 @@ Anything inside backticks will become inline snippet things
 
 #### Run Haskell
 Write `[haskell] ` and your code
+<br>
 ![Screenshot](assets/screenshots/06.png)
