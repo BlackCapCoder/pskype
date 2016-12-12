@@ -39,5 +39,5 @@ Any message starting with `>` will become green
 ![Screenshot](assets/screenshots/04.png)
 
 #### Inline snippet things!
-Anything inside backticks will become a inline snippet thing
+Anything inside backticks will become inline snippet things
 ![Screenshot](assets/screenshots/05.png)
