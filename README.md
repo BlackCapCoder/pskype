@@ -48,4 +48,5 @@ Write `[haskell] ` and your code
 ![Screenshot](assets/screenshots/06.png)
 <br>
 ![Screenshot](assets/screenshots/07.png)
+<br>
 And you can also not do IO operations, so it is compleatly safe
