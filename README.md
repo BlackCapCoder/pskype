@@ -46,3 +46,6 @@ Anything inside backticks will become inline snippet things
 Write `[haskell] ` and your code
 <br>
 ![Screenshot](assets/screenshots/06.png)
+<br>
+![Screenshot](assets/screenshots/07.png)
+And you can also not do IO operations, so it is compleatly safe
