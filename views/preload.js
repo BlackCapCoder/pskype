@@ -52,6 +52,7 @@
     
     msg = msg.replace(/windows/gi, "<span class='gay'>windows</span>");
     msg = msg.replace(/linux/gi, "<span class='cool'>Linux</span>");
+    msg = msg.replace(/`(.+?)`/g, "<span class='snippet'>$1</span>");
 
     return msg;
   }
@@ -117,7 +118,7 @@
 
   findMode = false;
   var finds    = [];
-  var findkeys = "asdfjklørughieqwopzxcvbnm"
+  var findkeys = "asdfjklrughieqwopzxcvbnm"
   function onKeyPress (e) {
     // console.log(e);
     if (e.srcElement.id == "chatInputAreaWithQuotes" || e.srcElement.classList.contains("ace_text-input")) {
@@ -182,7 +183,7 @@
       finds = [];
 
       for (let i = 0; i < els.length; i++) {
-        let k = "asdfjklørughieqwopzxcvbnm"[i];
+        let k = "asdfjklrughieqwopzxcvbnm"[i];
         let e = els[i];
         let f = document.createElement('span');
         let r = e.getBoundingClientRect();
@@ -273,11 +274,23 @@ function installAce (e) {
     // setInterval(installAce, 1000);
 
     setInterval( _ => {
-      var els = document.querySelectorAll(':root .swx .chat .conversation .message .bubble .content p');
+      var els = document.querySelectorAll(':root .swx .chat .conversation .message .bubble .content > p:not(.PictureSharing):not(.processed)');
       for (let i = 0; i < els.length; i++) {
         var el = els[i]
         el.innerHTML = processMessage(el.innerHTML);
-        el.outerHTML = el.outerHTML.replace("<p ","<message ").replace("</p>", "</message>");
+        el.classList.add('processed');
+        // el.outerHTML = el.outerHTML.replace("<p ","<message ").replace("</p>", "</message>");
+
+        var observer = new WebKitMutationObserver( (el => _ => {
+          if (el.classList.contains('processed')) el.classList.remove('processed');
+          el.obs.disconnect();
+          console.log('changed');
+        }) (el) );
+        
+        el.obs = observer;
+
+        var config = { childList: true, characterData: true, subtree: true };
+        observer.observe(el, config);
       }
     }, 1000);
 
