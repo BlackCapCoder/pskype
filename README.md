@@ -41,3 +41,7 @@ Any message starting with `>` will become green
 #### Inline snippet things!
 Anything inside backticks will become inline snippet things
 ![Screenshot](assets/screenshots/05.png)
+
+#### Run Haskell
+Write `[haskell] ` and your code
+![Screenshot](assets/screenshots/06.png)
