@@ -267,6 +267,14 @@ function installAce (e) {
 }
 
 	window.addEventListener("DOMContentLoaded", function(event) {
+
+    // Skype is using this excessively, and there is no ill effect of disabling it
+
+    // setTimeout( _ => {
+    //   document.querySelector    = undefined;
+    //   document.querySelectorAll = undefined;
+    // }, 5000);
+
 		$  = require('../assets/jquery-2.2.3.min');
     hl = require("highlight.js");
 
