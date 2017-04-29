@@ -72,11 +72,15 @@
     return msg;
   }
 
+  function isKeyEscape(event) {
+    return event.key == "Escape" || event.key == "Esc" || event.keyCode == 27 || (event.key == "[" && event.ctrlKey);
+  }
+
 	function stopIt(event) {
     // console.log(event);
 
     if (event.srcElement.id == "chatInputAreaWithQuotes") {
-      if (event.key == "Escape" || event.key == "Esc" || event.keyCode == 27) {
+      if (isKeyEscape(event)) {
         var hs = document.getElementsByClassName('conversationHistory');
 
         for (let i = 0; i < hs.length; i++) {
@@ -85,7 +89,7 @@
           return hs[i].querySelector('.conversation').focus();
         }
       }
-    } else if (findMode && (event.key == "Escape" || event.key == "Esc" || event.keyCode == 27)) {
+    } else if (findMode && isKeyEscape(event)) {
       for (let i = 0; i < finds.length; i++)
         finds[i][2].parentElement.removeChild(finds[i][2]);
       findMode = false;
