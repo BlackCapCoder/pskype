@@ -44,13 +44,13 @@
   function processMessage (msg) {
     // console.log(msg);
     if (msg.startsWith('&gt;'))
-      return "<span class='greentext'>" + msg + "</span>";
+      msg = "<span class='greentext'>" + msg + "</span>";
 
-    if (msg.startsWith('[CODE]<br>')) {
-      return "<code>" + hl.highlightAuto(msg.substr(10).replace(/<br>/g, "\n").replace(/&lt;/g,'<').replace(/&gt;/g,'>')).value + "</code>";
+    else if (msg.startsWith('[CODE]<br>')) {
+      msg = "<code>" + hl.highlightAuto(msg.substr(10).replace(/<br>/g, "\n").replace(/&lt;/g,'<').replace(/&gt;/g,'>')).value + "</code>";
     }
 
-    if (msg.startsWith('[haskell]')) {
+    else if (msg.startsWith('[haskell]')) {
       var code = msg.substr(9).replace(/<br>/g, "\n").replace(/&lt;/g,'<').replace(/&gt;/g,'>');
       var id   = Math.floor(Math.random() * 1000);
       
@@ -61,12 +61,12 @@
         el.outerHTML = "<code>" + hl.highlight("haskell", "-- Result:\n" + r).value + "</code>";
       });
 
-      return "<code>" + hl.highlight("haskell", code).value + "</code>" 
-           + "<span class='snippet' id='" + id + "'>Calculating..</span>";
+      msg = "<code>" + hl.highlight("haskell", code).value + "</code>" 
+            + "<span class='snippet' id='" + id + "'>Calculating..</span>";
     }
     
-    msg = msg.replace(/windows/gi, "<span class='gay'>windows</span>");
-    msg = msg.replace(/linux/gi, "<span class='cool'>Linux</span>");
+    msg = msg.replace(/windows/gi, "<span class='gay'>window$</span>");
+    msg = msg.replace(/linux/gi, "<span class='cool'>$&</span>");
     msg = msg.replace(/`(.+?)`/g, "<span class='snippet'>$1</span>");
 
     return msg;
